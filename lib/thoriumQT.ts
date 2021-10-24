@@ -2,7 +2,7 @@ import { GUI as gui } from "./GUI";
 import { Engine as engine} from "./Engine";
 import { Template as template } from "./Template";
 import { NodeUI as nodeui } from "./NodeUI";
-import { ElementUI as elementui} from "./ElementUI";
+import { ElementUI as elementui } from "./ElementUI";
 
 export namespace ThoriumQt{
 
@@ -12,6 +12,16 @@ export namespace ThoriumQt{
   */
   export class Engine extends engine{
     constructor(){super()};
+  }
+
+  /**
+  * @Title ThoriumQt.Component
+  * @Desc Permet de créer un component personaliser
+  */
+  export class Component extends elementui{
+    constructor(t:{type:string,prop:object,childrens:object[],proto:object}){
+      super({type:t.type,prop:t.prop,childrens:t.childrens,proto:t.proto},null,null);
+    }
   }
 
   /**
@@ -50,3 +60,9 @@ export namespace ThoriumQt{
   }
 
 }
+
+import { Style as style } from "./Style";
+
+export function Style(css:object):string{return (new style()).Css(css)}
+export function StyleSheet(csssheet:string|string[]):string{return (new style()).CssSheet(csssheet)}
+export function WidgetStyle(arg:{tag?:string|null , name?:string|string[]|null , style:string}):string{return (new style()).WidgetInCssSheet(arg)}

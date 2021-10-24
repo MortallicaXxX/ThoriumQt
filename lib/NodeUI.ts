@@ -15,7 +15,7 @@ export class NodeUI{
   #root:Engine|null = null;
   #parent:any|null = null;
 
-  constructor(template:object|[object] , root:Engine|null = null , parent:any|null = null){
+  constructor(template:object|object[] , root:Engine|null = null , parent:any|null = null){
     if(root) this.#root = root;
     if(parent) this.#parent = parent;
     else parent = this;
@@ -25,82 +25,83 @@ export class NodeUI{
   BuildIn(parent:any):Promise<void>{
     const _this = this;
 
-    return new Promise(function(next){
+    function generate(i:number = 0):Promise<void>{
+      return new Promise(async function(next){
 
-      if(_this.node.length == 0)next(parent);
-      for(const i of Array.from({length : _this.node.length} , (x:null,i:number) => i)){
+        console.log("generate",_this.node.length)
 
-        var template:Template|null = _this.node[i].template;
-        if(template == null)template = new Template({type:"empty",prop:null,proto:null});
+        // rien à générer
+        try{
+          if(_this.node.length == 0)throw {code:1 , message : "Pas d'enfants"};
 
-        const className:string|null = (template.type in nodegui ? template.type : (`Q${template.type}` in nodegui ? `Q${template.type}` : null));
+          var template:Template|null = _this.node[i].template;
+          if(template == null)template = new Template({type:"empty",prop:null,proto:null});
 
-        if(className){
+          const className:string|null = (template.type in nodegui ? template.type : (`Q${template.type}` in nodegui ? `Q${template.type}` : null));
 
-          /* Recuperation dynamique de la classe équivalante au type */
-          type typeKey = keyof typeof nodegui;
-          const typeName:typeKey = className as keyof typeof nodegui;
-          const sup:any = nodegui[typeName];
-          const childrens = new sup();
+          if(className){
 
-          if(template.prop)for(const key of Object.keys(template.prop)){
+            /* Recuperation dynamique de la classe équivalante au type */
+            type typeKey = keyof typeof nodegui;
+            const typeName:typeKey = className as keyof typeof nodegui;
+            const sup:any = nodegui[typeName];
+            const childrens = new sup();
 
-            /* ajout des propritée dynamiquement */
-            type CibleKey = keyof typeof sup;
-            const propName: CibleKey = `set${key}`;
+            if(template.prop)for(const key of Object.keys(template.prop)){
 
-            type TemplateKey = keyof typeof template.prop;
-            const keyOfValue: TemplateKey = key as keyof typeof template.prop;
-            const value:any = template.prop[keyOfValue];
-            childrens[propName](value);
+              /* ajout des propritée dynamiquement */
+              type CibleKey = keyof typeof sup;
+              const propName: CibleKey = `set${key}`;
 
-          }
+              type TemplateKey = keyof typeof template.prop;
+              const keyOfValue: TemplateKey = key as keyof typeof template.prop;
+              const value:any = template.prop[keyOfValue];
 
-          // console.table({parent:parent,childrens:childrens,toBuild:(_this.node[i].ui == null ? "null" : _this.node[i].ui )});
+              childrens[propName](value);
 
-          console.table({
-            parentType : parent.type,
-            childrenType : childrens.type,
-            childrenTemplateType : template.type,
-            addWidget_parent : "addWidget" in parent,
-            setLayout_parent : "setLayout" in parent,
-            setCentralWidget_parent : "setCentralWidget" in parent,
-            setFlexNode_children : "setFlexNode" in childrens,
-          })
+            }
 
-          if(_this.node[i].ui !== null){
-            _this.node[i].ui?.BuildIn(childrens)
-            .then(function(result){
-              console.log("result");
-              if("setFlexNode" in childrens)childrens.setFlexNode(parent.getFlexNode());
-              console.log("setLayout" in parent);
-              if("addWidget" in parent)parent.addWidget(childrens);
-              else if("setLayout" in parent) parent.setLayout(childrens);
-              console.log(childrens);
+            if(childrens.type == "widget") parent.addWidget(childrens);
+            if(childrens.type == "layout") parent.setLayout(childrens);
+
+            /* Enfants à générer */
+            if(_this.node[i].ui != null){
+              console.log(_this.node[i].ui);
+              _this.node[i].ui?.BuildIn(childrens)
+              .then(async function(){
+
+                console.log('\x1b[32m%s\x1b[0m',`Génération des [${_this.node[i].ui?.node.length}] enfants OK!`);
+
+                if(i == _this.node.length - 1)next(childrens);
+                else next(await generate(i + 1))
+
+              })
+
+            }
+            else {
               if(i == _this.node.length - 1)next(childrens);
-            })
-          }
-          else {
-            if("setFlexNode" in childrens)childrens.setFlexNode(parent.getFlexNode());
+              else next(await generate(i + 1))
+            }
 
-            if("addWidget" in parent)parent.addWidget(childrens);
-            else if("setLayout" in parent)parent.setLayout(childrens);
-            // console.log(childrens);
-            if(i == _this.node.length - 1)next(childrens);
           }
-
+          else next(parent);
         }
-        else next(parent);
+        catch(err:any){
+          if(err.code == 1)next(parent)
+        }
 
-      }
+      })
+    }
 
-    })
+    return generate();
   }
 
   #normalize(template:object|[object]|null):Array<ElementUI>|[]{
     if(template && typeof template == 'object' && !Array.isArray(template))template = [template];
     if(template && Array.isArray(template)) return Array.from(template , function(x:any,i:number){
-      return new ElementUI(x);
+      console.log(x);
+      if(x.__proto__.constructor.name == "Object") return new ElementUI(x);
+      else return x;
     });
     else return [];
   }
