@@ -1,6 +1,8 @@
 import * as nodegui from '@nodegui/nodegui';
 import { GUI } from "./GUI";
-import { Controls } from "./Controls"
+import { Controls } from "./Controls";
+import { Cpu as cpu } from "./Cpu";
+import { GlobalHandler } from "./GlobalHandler";
 
 /**
 * @Title ThoriumQt.Engine
@@ -14,19 +16,31 @@ export class Engine{
   #layout:nodegui.FlexLayout = new this.#nodegui.FlexLayout();
 
   Controls:Controls.Controler = new Controls.Controler(this);
+  Cpu:cpu.Process = new cpu.Process(this);
+  Handlers:GlobalHandler = new GlobalHandler;
 
+  onready:(self:Engine)=>void=(x:Engine)=>{};
+  set onReady(arg:(arg0:Engine)=>void){
+    this.onready = arg;
+    this.onready(this);
+  };
+
+  /** @nodegui */
+  get nodegui():typeof nodegui{return this.#nodegui;}
   /** @window est l'écrant principale de l'application */
-  get Window():nodegui.QMainWindow{return this.#window};
+  get Window():nodegui.QMainWindow{return this.#window;}
   #gui:GUI|null = null;
   /** @App NodeUI globale de l'interface */
   get Gui():GUI|null{return this.#gui;}
   /** @App NodeUI globale de l'interface */
   get App():nodegui.QWidget{return this.#app;}
-
-
-
   /** @setWindowTitle définis le titre apparant de l'application */
   get setWindowTitle():(title:string)=>void{return this.#setWindowTitle};
+
+  Initialise(){return this.Handlers.Initialise(this.#window,this)}
+  Update(){return this.Handlers.Update(this.#window,this)}
+  Resize(){return this.Handlers.Resize(this.#window,this)}
+  FrameUpdate(Cpu:cpu.Process){return this.Handlers.FrameUpdate(this.#window,this,Cpu)}
 
 
   constructor(){

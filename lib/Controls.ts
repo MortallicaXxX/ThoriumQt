@@ -16,7 +16,9 @@ export namespace Controls{
     get Right():boolean{return this.Buttons[0];}
     get Left():boolean{return this.Buttons[1];}
 
-    UpdatePosition(event:QMouseEvent){this.Position = {x:event.x() , y:event.y()};}
+    UpdatePosition(event:QMouseEvent){
+      this.Position = {x:event.x() , y:event.y()};
+    }
     UpdateClick(isClicked:boolean,event:QMouseEvent){
       this.isClicked = isClicked;
       this.Buttons[event.button() - 1] = isClicked;
@@ -37,9 +39,7 @@ export namespace Controls{
       if(engine)this.UpdateDimensions(engine.Window.geometry());
     }
 
-    UpdateDimensions(dimensions:QRect){
-      this.Dimensions = {height:dimensions.height() , width : dimensions.width()}
-    }
+    UpdateDimensions(dimensions:QRect){this.Dimensions = {height:dimensions.height() , width : dimensions.width()};}
 
   }
 
