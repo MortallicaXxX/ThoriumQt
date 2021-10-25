@@ -3,16 +3,31 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "watch": {
+    "compile_debug": {
+      "patterns": [
+        "src",
+        "lib"
+      ],
+      "extensions": "ts",
+      "quiet": false,
+      "delay": 100000
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production",
+    "compile": "tsc",
     "start": "webpack && qode ./dist/index.js",
-    "debug": "webpack && qode --inspect ./dist/index.js"
+    "debug": "webpack && qode --inspect ./dist/index.js",
+    "build": "webpack --mode production",
+    "watch_debug": "npm-watch",
+    "compile_debug": "npm run compile && npm run debug"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nodegui/nodegui": "^0.36.0"
+    "@nodegui/nodegui": "^0.36.0",
+    "npm-watch": "^0.11.0"
   },
   "devDependencies": {
     "@nodegui/packer": "^1.5.0",

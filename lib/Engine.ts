@@ -1,5 +1,6 @@
 import * as nodegui from '@nodegui/nodegui';
 import { GUI } from "./GUI";
+import { Controls } from "./Controls"
 
 /**
 * @Title ThoriumQt.Engine
@@ -8,29 +9,33 @@ import { GUI } from "./GUI";
 export class Engine{
 
   #nodegui:typeof nodegui = nodegui;
-  #window:nodegui.QMainWindow = new nodegui.QMainWindow();
-  #app:nodegui.QWidget = new nodegui.QWidget();
-  #layout:nodegui.FlexLayout = new nodegui.FlexLayout();
-  // /** @window est l'écrant principale de l'application */
-  // get Window():QMainWindow|null{return this.#window};
+  #window:nodegui.QMainWindow = new this.#nodegui.QMainWindow();
+  #app:nodegui.QWidget = new this.#nodegui.QWidget();
+  #layout:nodegui.FlexLayout = new this.#nodegui.FlexLayout();
+
+  Controls:Controls.Controler = new Controls.Controler(this);
+
+  /** @window est l'écrant principale de l'application */
+  get Window():nodegui.QMainWindow{return this.#window};
   #gui:GUI|null = null;
   /** @App NodeUI globale de l'interface */
   get Gui():GUI|null{return this.#gui;}
   /** @App NodeUI globale de l'interface */
   get App():nodegui.QWidget{return this.#app;}
 
+
+
   /** @setWindowTitle définis le titre apparant de l'application */
   get setWindowTitle():(title:string)=>void{return this.#setWindowTitle};
 
 
   constructor(){
-    this.#window = new nodegui.QMainWindow();
+    // this.#window = new nodegui.QMainWindow();
     // if(title)this.setWindowTitle("test");
 
-    this.#app = new nodegui.QWidget();
+    // this.#app = new nodegui.QWidget();
     this.#app.setObjectName("app");
     // this.#layout = new nodegui.FlexLayout();
-    // this.#app.setLayout(this.#layout);
 
     (global as any).win = this.#window;
   }

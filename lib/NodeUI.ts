@@ -28,8 +28,6 @@ export class NodeUI{
     function generate(i:number = 0):Promise<void>{
       return new Promise(async function(next){
 
-        console.log("generate",_this.node.length)
-
         // rien à générer
         try{
           if(_this.node.length == 0)throw {code:1 , message : "Pas d'enfants"};
@@ -66,7 +64,6 @@ export class NodeUI{
 
             /* Enfants à générer */
             if(_this.node[i].ui != null){
-              console.log(_this.node[i].ui);
               _this.node[i].ui?.BuildIn(childrens)
               .then(async function(){
 
@@ -99,7 +96,6 @@ export class NodeUI{
   #normalize(template:object|[object]|null):Array<ElementUI>|[]{
     if(template && typeof template == 'object' && !Array.isArray(template))template = [template];
     if(template && Array.isArray(template)) return Array.from(template , function(x:any,i:number){
-      console.log(x);
       if(x.__proto__.constructor.name == "Object") return new ElementUI(x);
       else return x;
     });
