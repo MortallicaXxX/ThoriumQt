@@ -19,7 +19,7 @@ export namespace ThoriumQt{
   * @Desc Permet de créer un component personaliser
   */
   export class Component extends elementui{
-    constructor(t:{type:string,prop:object,childrens:object[],proto:object}){
+    constructor(t:any){
       super({type:t.type,prop:t.prop,childrens:t.childrens,proto:t.proto},null,null);
     }
   }

@@ -1,5 +1,10 @@
 import { Engine } from './Engine';
 
+/**
+* @Title ComponentsLib.Button
+* @Desc Boutton par défaut
+* @Tag QLabel
+*/
 export namespace Cpu{
 
   interface cpusTime{
@@ -31,6 +36,8 @@ export namespace Cpu{
   }
 
   export class Process{
+
+    test:Engine|null = null;
 
     #engine:Engine|null = null;
     #os:any = require('os');

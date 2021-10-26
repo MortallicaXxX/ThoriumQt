@@ -14,8 +14,9 @@ export class GUI{
     this.#ui = new NodeUI(template);
   }
 
-  BuildIn(parent:any):void{
-    if(this.#ui)this.#ui.BuildIn(parent);
+  BuildIn(parent:any):Promise<void>{
+    if(this.#ui)return this.#ui.BuildIn(parent);
+    else return Promise.resolve();
   }
 
 }

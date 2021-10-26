@@ -4,17 +4,17 @@ import * as nodegui from '@nodegui/nodegui';
 
 export class GlobalHandler{
 
-  Initialise(window:nodegui.QMainWindow,engine:Engine){
-
+  Initialise(app:any,engine:Engine){
+    app.th.Initialise(app,engine);
   };
-  Update(window:nodegui.QMainWindow,engine:Engine){
-
+  Update(app:any,engine:Engine){
+    app.th.Update();
   }
-  Resize(window:nodegui.QMainWindow,engine:Engine){
-
+  Resize(app:any,engine:Engine){
+    app.th.Resize(app,engine);
   }
-  FrameUpdate(window:nodegui.QMainWindow,engine:Engine,cpu:Cpu.Process){
-    console.log(cpu.Stats);
+  FrameUpdate(app:any,engine:Engine,cpu:Cpu.Process){
+    app.th.FrameUpdate(app,engine,cpu);
   }
 
 }

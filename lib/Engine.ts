@@ -3,6 +3,7 @@ import { GUI } from "./GUI";
 import { Controls } from "./Controls";
 import { Cpu as cpu } from "./Cpu";
 import { GlobalHandler } from "./GlobalHandler";
+import { Th } from "./Th";
 
 /**
 * @Title ThoriumQt.Engine
@@ -11,8 +12,8 @@ import { GlobalHandler } from "./GlobalHandler";
 export class Engine{
 
   #nodegui:typeof nodegui = nodegui;
-  #window:nodegui.QMainWindow = new this.#nodegui.QMainWindow();
-  #app:nodegui.QWidget = new this.#nodegui.QWidget();
+  #window:any = new this.#nodegui.QMainWindow();
+  #app:any = new this.#nodegui.QWidget();
   #layout:nodegui.FlexLayout = new this.#nodegui.FlexLayout();
 
   Controls:Controls.Controler = new Controls.Controler(this);
@@ -37,10 +38,10 @@ export class Engine{
   /** @setWindowTitle définis le titre apparant de l'application */
   get setWindowTitle():(title:string)=>void{return this.#setWindowTitle};
 
-  Initialise(){return this.Handlers.Initialise(this.#window,this)}
-  Update(){return this.Handlers.Update(this.#window,this)}
-  Resize(){return this.Handlers.Resize(this.#window,this)}
-  FrameUpdate(Cpu:cpu.Process){return this.Handlers.FrameUpdate(this.#window,this,Cpu)}
+  Initialise(){return this.Handlers.Initialise(this.#app,this)}
+  Update(){return this.Handlers.Update(this.#app,this)}
+  Resize(){try{return this.Handlers.Resize(this.#app,this)}catch(err){}}
+  FrameUpdate(Cpu:cpu.Process){return this.Handlers.FrameUpdate(this.#app,this,Cpu)}
 
 
   constructor(){
@@ -73,8 +74,11 @@ export class Engine{
   get GUI():(template:object)=>Engine{return this.#setGUI;}
 
   Show(){
+    this.#app = (new Th).Prototype(this.#app);
+    this.#window = (new Th).Prototype(this.#window);
     this.#window.setCentralWidget(this.#app);
     this.#window.show();
+    this.Initialise();
   }
 
   setStyleSheet(css:string){

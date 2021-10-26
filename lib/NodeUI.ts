@@ -1,6 +1,7 @@
 import { Template } from "./Template"
 import { ElementUI } from "./ElementUI"
 import { Engine } from "./Engine";
+import { Th } from "./Th";
 import * as nodegui from '@nodegui/nodegui';
 
 /**
@@ -44,6 +45,7 @@ export class NodeUI{
             const typeName:typeKey = className as keyof typeof nodegui;
             const sup:any = nodegui[typeName];
             const childrens = new sup();
+            childrens.root = _this.#root;
 
             if(template.prop)for(const key of Object.keys(template.prop)){
 
@@ -59,24 +61,26 @@ export class NodeUI{
 
             }
 
-            if(childrens.type == "widget") parent.addWidget(childrens);
-            if(childrens.type == "layout") parent.setLayout(childrens);
+            const ch:any = (new Th).Prototype(childrens,template);
+
+            if(ch.type == "widget") parent.addWidget(ch);
+            if(ch.type == "layout") parent.setLayout(ch);
 
             /* Enfants à générer */
             if(_this.node[i].ui != null){
-              _this.node[i].ui?.BuildIn(childrens)
+              _this.node[i].ui?.BuildIn(ch)
               .then(async function(){
 
                 console.log('\x1b[32m%s\x1b[0m',`Génération des [${_this.node[i].ui?.node.length}] enfants OK!`);
 
-                if(i == _this.node.length - 1)next(childrens);
+                if(i == _this.node.length - 1)next(ch);
                 else next(await generate(i + 1))
 
               })
 
             }
             else {
-              if(i == _this.node.length - 1)next(childrens);
+              if(i == _this.node.length - 1)next(ch);
               else next(await generate(i + 1))
             }
 

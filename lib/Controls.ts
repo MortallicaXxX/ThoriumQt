@@ -33,13 +33,18 @@ export namespace Controls{
 
   class Screen{
 
+    #engine:Engine|null = null;
     Dimensions:ScreenDimensions = {height:0,width:0}
 
     constructor(engine?:Engine){
+      if(engine)this.#engine = engine;
       if(engine)this.UpdateDimensions(engine.Window.geometry());
     }
 
-    UpdateDimensions(dimensions:QRect){this.Dimensions = {height:dimensions.height() , width : dimensions.width()};}
+    UpdateDimensions(dimensions:QRect){
+      this.Dimensions = {height:dimensions.height() , width : dimensions.width()};
+      this.#engine?.Resize();
+    }
 
   }
 
