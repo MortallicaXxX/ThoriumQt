@@ -11,8 +11,7 @@
     "alwaysStrict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "watch":true,
     "skipLibCheck": true
   },
-  "include": ["**/*"]
+  "include": ["src"]
 }

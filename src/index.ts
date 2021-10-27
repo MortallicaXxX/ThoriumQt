@@ -6,9 +6,9 @@ import {
   Style ,
   StyleSheet ,
   WidgetStyle as Wstyle
-} from "../lib/ThoriumQt";
+} from "./ThoriumQt/ThoriumQt";
 
-import { ComponentsLib as component } from "../lib/components";
+import { ComponentsLib as component } from "./ThoriumQt/components";
 const {
   Text:Text ,
   Button:Button ,
@@ -19,7 +19,7 @@ const {
   Table:Table
 } = component;
 
-import { View1 } from "../views/view.1";
+import { View1 } from "./views/view.1";
 
 const thorium:ThoriumQt.Engine = new ThoriumQt.Engine();
 

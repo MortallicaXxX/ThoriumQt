@@ -4,12 +4,12 @@ import {
   Style ,
   StyleSheet ,
   WidgetStyle as Wstyle
-} from "../lib/ThoriumQt";
+} from "../ThoriumQt/ThoriumQt";
 import {
   ComponentsLib as Component
-} from "../lib/components";
+} from "../ThoriumQt/components";
 
-import { ComponentsLib as component } from "../lib/components";
+import { ComponentsLib as component } from "../ThoriumQt/components";
 
 /**
 * @Title View
